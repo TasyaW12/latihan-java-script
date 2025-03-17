@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas 4 - JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Tugas 4 - JavaScript</h1>
+
+    <div id="inputSection">
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" required>
+        <br>
+        <label for="jumlahPilihan">Jumlah Pilihan</label>
+        <input type="number" id="jumlahPilihan" min="1" required>
+        <br>
+        <button id="ok1" onclick="showChoices()">OK</button>
+    </div>
+
+    <div id="choicesSection" style="display: none;">
+        <h3>Masukkan Pilihan</h3>
+        <div id="pilihanInputs"></div>
+        <button id="ok2" onclick="showRadioButtons()">OK</button>
+    </div>
+
+    <div id="radioSection" style="display: none;">
+        <h3>Pilih Salah Satu</h3>
+        <div id="radioButtons"></div>
+        <button id="ok3" onclick="showResult()">OK</button>
+    </div>
+
+    <div id="resultSection" style="display: none;">
+        <h3>Hasil</h3>
+        <p id="resultText"></p>
+    </div>
+
+    <script>
+        function showChoices() {
+            document.getElementById('ok1').style.display = 'none';
+            document.getElementById('choicesSection').style.display = 'block';
+
+            // Menonaktifkan input setelah tombol OK ditekan
+            document.getElementById('nama').disabled = true;
+            document.getElementById('jumlahPilihan').disabled = true;
+
+            const jumlahPilihan = document.getElementById('jumlahPilihan').value;
+            const pilihanInputs = document.getElementById('pilihanInputs');
+            pilihanInputs.innerHTML = '';
+
+            for (let i = 1; i <= jumlahPilihan; i++) {
+                pilihanInputs.innerHTML += `
+                    <label for="pilihan${i}">Pilihan ${i}:</label>
+                    <input type="text" id="pilihan${i}" required>
+                    <br>
+                `;
+            }
+        }
+
+        function showRadioButtons() {
+            document.getElementById('ok2').style.display = 'none';
+            document.getElementById('radioSection').style.display = 'block';
+
+            const jumlahPilihan = document.getElementById('jumlahPilihan').value;
+            const radioButtons = document.getElementById('radioButtons');
+            radioButtons.innerHTML = '';
+
+            for (let i = 1; i <= jumlahPilihan; i++) {
+                const inputPilihan = document.getElementById(`pilihan${i}`);
+
+                // Pastikan nilai input diambil sebelum di-disable
+                const pilihan = inputPilihan.value;
+                inputPilihan.disabled = true;
+
+                radioButtons.innerHTML += `
+                    <label>
+                        <input type="radio" name="pilihan" value="${pilihan}"> ${pilihan}
+                    </label>
+                    <br>
+                `;
+            }
+        }
+
+        function showResult() {
+            document.getElementById('ok3').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+            const selectedOption = document.querySelector('input[name="pilihan"]:checked');
+
+            if (selectedOption) {
+                // Menonaktifkan radio button setelah tombol OK ditekan
+                document.querySelectorAll('input[name="pilihan"]').forEach(radio => {
+                    radio.disabled = true;
+                });
+
+                const nama = document.getElementById('nama').value;
+                const jumlahPilihan = document.getElementById('jumlahPilihan').value;
+                let pilihanList = '';
+                for (let i = 1; i <= jumlahPilihan; i++) {
+                    pilihanList += document.getElementById(`pilihan${i}`).value;
+                    if (i < jumlahPilihan) {
+                        pilihanList += ', ';
+                    }
+                }
+                document.getElementById('resultText').innerText = `Hallo, nama saya ${nama}, saya mempunyai sejumlah ${jumlahPilihan} pilihan yaitu ${pilihanList}, dan saya memilih ${selectedOption.value}.`;
+            }
+        }
+    </script>
+</body>
+
+</html>
